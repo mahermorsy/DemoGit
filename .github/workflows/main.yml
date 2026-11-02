@@ -15,3 +15,13 @@ jobs:
             echo "Welcome to GitHub Actions"
             echo "Starting CI/CD Pipeline"
             echo "Build Started"
+
+
+    - name: Checkout Repository
+      uses: actions/checkout@v6.1.0
+
+    - name: List Repository Files
+      run: ls-la
+
+    
+    
