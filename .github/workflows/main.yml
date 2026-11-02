@@ -1,0 +1,17 @@
+name: FirstGithub Action
+
+on: 
+ push:
+   branches: 
+     - main
+
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Print messages
+      run: |
+            echo "Welcome to GitHub Actions"
+            echo "Starting CI/CD Pipeline"
+            echo "Build Started"
