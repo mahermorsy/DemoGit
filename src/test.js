@@ -1,5 +1,5 @@
 function greet(name) {
-    console.log(`Hello, ${name}!`);
+    console.log(`Welcome, ${name}!`);
 }
 module.exports = greet;
 if (require.main === module) {

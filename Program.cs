@@ -1,3 +1,5 @@
-using System;
 using src.MyApp;
-new src.MyApp.App().Run();
+
+var app = new App();
+app.Run();       // Hello, World!
+app.Run("Test"); // Hello, Test!
