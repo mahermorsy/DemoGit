@@ -3,7 +3,7 @@
 #src/test.sh
 EXPECTED="Hello, Test!"
 
-OUTPUT=$(node ./src/app.js Test)
+OUTPUT=$(node ./src/test.js Test)
 
 if [ "$OUTPUT" == "$EXPECTED" ]; then
 
