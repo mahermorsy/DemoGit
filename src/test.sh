@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #src/test.sh
-EXPECTED="Hello, Test!"
+EXPECTED="Welcome, Test!"
 
 OUTPUT=$(node ./src/test.js Test)
 
