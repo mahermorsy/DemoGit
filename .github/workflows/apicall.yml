@@ -1,0 +1,12 @@
+name: API Call Deploy Demo
+
+on:
+  repository_dispatch:
+    types: [incident_report]
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print incident message
+        run: echo "Incident report received" 
