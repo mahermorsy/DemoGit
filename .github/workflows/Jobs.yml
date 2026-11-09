@@ -1,0 +1,32 @@
+name: Manual Jobs Deploy
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Jobs decription
+        run: echo "Deploying application to Jobs ${{github.job}}"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Print Jobs decription
+        run: echo "building application to Jobs ${{github.job}}"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Print Jobs decription
+        run: echo "testing application to Jobs ${{github.job}}"
+
+  publis:
+    runs-on: ubuntu-latest
+    needs: [build ,deploy, test]
+    steps:
+      - name: Print Jobs decription
+        run: echo "testing application to Jobs ${{github.job}}"
