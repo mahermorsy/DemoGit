@@ -1,0 +1,74 @@
+name: Expressions Lab
+
+on:
+  push:
+    branches: [main, 'feature/**']
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Choose the status to demonstrate
+        type: choice
+        options: [pass, fail, cancel]
+        default: pass
+
+permissions: {}
+
+jobs:
+  expressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Show trigger and ref
+        run: printf 'event=%s ref=%s\n' "$GITHUB_EVENT_NAME" "$GITHUB_REF"
+
+      - name: Push only
+        if: ${{ github.event_name == 'push' }}
+        run: echo "Triggered by push"
+
+      - name: Push or main
+        if: ${{ github.event_name == 'push' || github.ref == 'refs/heads/main' }}
+        run: echo "Push or main"
+
+      - name: Push to main only
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        run: echo "Push to main"
+
+      - name: Push whose latest commit is ready
+        if: ${{ github.event_name == 'push' && github.event.head_commit && !contains(github.event.head_commit.message, 'WIP') }}
+        run: echo "Latest commit message has no WIP"
+
+      - name: Version tag
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: echo "Version tag detected"
+
+      - name: Simulate deployment
+        id: demo
+        shell: bash
+        env:
+          SCENARIO: ${{ inputs.scenario || 'pass' }}
+        run: |
+          case "$SCENARIO" in
+            pass) echo "Simulated deployment succeeded" ;;
+            fail) echo "Simulated deployment failed"; exit 1 ;;
+            cancel) echo "Cancel the run now from the Actions page"; sleep 120 ;;
+          esac
+
+      - name: Report success
+        if: ${{ success() }}
+        run: echo "Success path"
+
+      - name: Cleanup after simulated deployment failure
+        if: ${{ failure() && steps.demo.outcome == 'failure' }}
+        run: echo "Failure cleanup would run here"
+
+      - name: Report cancellation
+        if: ${{ cancelled() }}
+        run: echo "Cancellation path"
+
+      - name: Print final status
+        if: ${{ always() }}
+        env:
+          JOB_STATUS: ${{ job.status }}
+          DEMO_OUTCOME: ${{ steps.demo.outcome }}
+        run: printf 'job=%s demo=%s\n' "$JOB_STATUS" "$DEMO_OUTCOME"
