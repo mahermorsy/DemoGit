@@ -1,0 +1,56 @@
+name: Local and Docker Actions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  action-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run my local action
+        uses: ./.github/action/myfirstaction
+        with:
+          name: Maher
+
+  hybrid-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run on the Ubuntu runner
+        run: echo "This runs on the Ubuntu runner"
+
+      - name: Run inside an Alpine container
+        uses: docker://alpine:3.22
+        with:
+          entrypoint: /bin/echo
+          args:
+            -C "This runs inside an Alpine container"
+            
+      - name: Run on the Ubuntu runner
+        run: echo "This runs on the Ubuntu runner"
+
+  Dockerized_job_Public:
+    runs-on: ubuntu-latest
+    container: node:20
+    steps:
+      - run: node --version
+      - run : echo "This wholw job runs on the Node.js docker container"
+
+  
+  dockerized-job-private:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/my-org/my-private-image:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - run: node --version
+      - run: echo "This job runs inside the private container"
+    
+            
