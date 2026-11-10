@@ -1,0 +1,17 @@
+name: Workflow Commands Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for deprecated functions
+        shell: bash
+        run: |
+          deprecated=true
+
+          if [[ "$deprecated" == "true" ]]; then
+            echo "::warning::Deprecated function found"
+          fi
