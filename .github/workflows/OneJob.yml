@@ -1,0 +1,27 @@
+name: Manual Jobs Testing
+
+on:
+  workflow_dispatch:
+
+jobs:
+  running-bash:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies and run tests
+        shell: bash
+        #pwsh, cmd, powershell, python
+
+        run: |
+          echo "Running job: ${{ github.job }}"
+          npm install
+          npm test
+        working-directory: ./temp
+
+
+      - name: Print workspace path with Perl
+        shell: perl {0}
+        run:  print "$ENV{GITHUB_WORKSPACE}\n";
+        
