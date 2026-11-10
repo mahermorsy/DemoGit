@@ -3,15 +3,47 @@ name: Workflow Commands Demo
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   example:
     runs-on: ubuntu-latest
+
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # يسجل تحذيرًا، ويكمل تشغيل الخطوات.
       - name: Check for deprecated functions
         shell: bash
         run: |
           deprecated=true
-
           if [[ "$deprecated" == "true" ]]; then
             echo "::warning::Deprecated function found"
+          fi
+
+      # القيمة متاحة للخطوات التالية في نفس الـ job.
+      - name: Set demo API key
+        shell: bash
+        run: echo "API_KEY=12345" >> "$GITHUB_ENV"
+
+      # القيمة تجريبية. المفاتيح الحقيقية توضع في GitHub Secrets ولا تُطبع.
+      - name: Demonstrate log masking
+        shell: bash
+        run: |
+          echo "::add-mask::$API_KEY"
+          echo "Using demo API key $API_KEY"
+
+      # استخدمنا package.json الموجود في جذر DemoGit.
+      # غيّر الاسم إلى config.yaml لو ده الملف المطلوب في مشروعك.
+      - name: Check for a required file
+        shell: bash
+        run: |
+          file=package.json
+          if [[ -f "$file" ]]; then
+            echo "::debug::$file exists"
+          else
+            echo "::error::$file is missing"
+            exit 1
           fi
